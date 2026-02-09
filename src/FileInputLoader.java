@@ -3,43 +3,74 @@ import java.util.Scanner;
 
 public class FileInputLoader {
     //Load file from path
-    public static void loadFile(String path, PatronManager manager) {
-        //Declare id, name, address and fine
+    public static void loadFile(String path, patron_manager manager) {
+        //Variable declaration
         int id;
         String name;
         String address;
         double fine;
+        int addedCount = 0;
 
-        try (Scanner scan_file = new Scanner(new File(path))) {
-            while (scan_file.hasNextLine()) {
-                String line = scan_file.nextLine();
+        //Try scan and catch error
+        try (Scanner scanFile = new Scanner(new File(path))) {
+            while (scanFile.hasNextLine()) {
+                //Read each line
+                String line = scanFile.nextLine().trim();
+                if (line.isEmpty()) continue;
 
-                //Break the file every "," to check the validity of each patron
-                String[] brakeline = line.split(",");
+                //Split every "," for catch each item
+                String[] parts = line.split(",");
 
-                //each patron mush contains 4 lines otherwise skip
-                if (brakeline.length != 4) continue;
+                //Check if found more items than expected
+                if (parts.length != 4) {
+                    System.out.println("Skipping invalid line: " + line);
+                    continue;
+                }
 
-                //Assign the variable
-                id = Integer.parseInt(brakeline[0].trim());
-                name = brakeline[1].trim();
-                address = brakeline[2].trim();
-                fine = Double.parseDouble(brakeline[3].trim());
+                try {
+                    id = Integer.parseInt(parts[0].trim());
+                    name = parts[1].trim();
+                    address = parts[2].trim();
+                    fine = Double.parseDouble(parts[3].trim());
 
-                //Id must contain 7 unique digits otherwise skip
-                if (id < 1000000 || id > 9999999) continue;
-                //name an address must not be empty otherwise skip
-                if (name.isEmpty() || address.isEmpty()) continue;
-                //fine must be between 0 and 250 otherwise skip
-                if (fine < 0 || fine > 250) continue;
+                    // Validation of each variable
+                    if (id < 1000000 || id > 9999999) {
+                        System.out.println("Skipping invalid ID: " + id);
+                        continue;
+                    }
+                    //Name must be string and not empty and does not contain number
+                    if (name.isEmpty() || !name.matches("[a-zA-Z ]+")) {
+                        System.out.println("Skipping invalid name: " + name);
+                        continue;
+                    }
+                    //Name must be string and not empty
+                    if (address.isEmpty()) {
+                        System.out.println("Skipping empty address");
+                        continue;
+                    }
+                    //Fine must be between 0 and 250
+                    if (fine < 0 || fine > 250) {
+                        System.out.println("Skipping invalid fine: " + fine);
+                        continue;
+                    }
 
-                //If condition are met. add patron
-                manager.addPatron(new Patron(id, name, address, fine));
+                    //Check if id is not already there
+                    if (manager.addPatron(new Patron(id, name, address, fine))) {
+                        addedCount++;
+                        System.out.println("Successfully added patron: " + name);
+                    } else {
+                        System.out.println("Failed duplicate id: " + id);
+                    }
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Line skipped, wrong format: " + line);
+                }
             }
-        }
-        //Show error if any problem found in the file
-        catch (Exception e) {
-            System.out.println("There may be a problem in the path or file");
+
+            System.out.println("File loading completed");
+
+        } catch (Exception e) {
+            System.out.println("There may be a problem in path provided: ");
         }
     }
 }

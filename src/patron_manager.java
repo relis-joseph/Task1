@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Class to manage patron
-public class PatronManager {
+public class patron_manager {
 
     //List of patron in an Arraylist
     private List<Patron> patrons = new ArrayList<>();

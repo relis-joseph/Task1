@@ -35,6 +35,6 @@ public class Patron {
     //toString return
     @Override
     public String toString() {
-        return id_patron + " | " + patron_name + " | " + patron_address + " | Fine: " + overdue_fine;
+        return id_patron + " ** " + patron_name + " ** " + patron_address + " ** Fine: " + overdue_fine;
     }
 }
