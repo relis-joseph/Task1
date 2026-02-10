@@ -2,6 +2,9 @@
   <artifact type="jar" name="Task1:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Task1_jar</output-path>
     <root id="archive" name="Task1.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/out/Task1.jar/META-INF/MANIFEST.MF" />
+      </element>
       <element id="module-output" name="Task1" />
     </root>
   </artifact>
