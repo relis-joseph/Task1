@@ -3,9 +3,10 @@ import java.util.Scanner;
 public class Menu {
 
     public static void start(patron_manager manager) {
+        patron_manager patron_manager = new patron_manager();
         Scanner scanner = new Scanner(System.in);
         int choice;
-        System.out.println("We are happy to have you with us\n");
+        System.out.println(" Type 1-4 to display the menu or other number to read file");
 
         do {
             System.out.println("\nPress 1 to add a patron");
@@ -26,10 +27,7 @@ public class Menu {
 
             //If user choose a different character from what are in the menu
             while (choice < 1 || choice > 4) {
-                System.out.print("Please enter a valid option from the menu: ");
-                while (!scanner.hasNextInt()) {
-                    scanner.next();
-                }
+                FileInputLoader.loadFile(patron_manager);
                 //Assign the value entered
                 choice = scanner.nextInt();
                 scanner.nextLine();
@@ -41,6 +39,7 @@ public class Menu {
                 case 2 -> remove_patron(scanner, manager);
                 case 3 -> displayPatrons(manager);
                 case 4 -> System.out.println("Thank you for using our program");
+                default -> FileInputLoader.loadFile(patron_manager);
             }
 
         } while (choice != 4);
@@ -75,10 +74,10 @@ public class Menu {
             System.out.print("Please type the patron's address: ");
             address = scanner.nextLine().trim();
             //Check if address is not empty and string
-            if (address.isEmpty() || !address.matches("[a-zA-Z ]+")) {
+            if (address.isEmpty() || !address.matches("^[a-zA-Z0-9\\s.,#\\-/]+$")) {
                 System.out.println("Please check the address.");
             }
-        } while (address.isEmpty() || !address.matches("[a-zA-Z ]+"));
+        } while (address.isEmpty() || !address.matches("^[a-zA-Z0-9\\s.,#\\-/]+$"));
 
         double fine;
         do {
